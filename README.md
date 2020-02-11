@@ -30,7 +30,7 @@ behavioural_data <- compile(*_data.csv)
 # merge the two datasets by subject 
 dataset <- concatenate(behavioural_data & demographic_data, by = subject)
 
-# interested in analyzing the RT on correct trials, so create a dataset with only the correct responses – analyze RT
+# interested in analyzing the RT on correct trials, so create a dataset with only the correct responses â€“ analyze RT
 # trim the reaction times so that RTs less than or equal to 100ms
 dataset_correct <- remove(dataset, where dataset$correct == 0 & dataset&RT ? 100)
  
@@ -42,7 +42,7 @@ if(RT > 2.5 * SD(mean(RT)) then remove(RT)
 # create a summary dataframe with the mean RT and accuracy for each subject  
 summary_data <- summarize(dataset_correct by subject)
 
-# Visualize the data to see if there are any major outliers – super long RTs or overall low mean accuracy: use a boxplot with a labelling function to identify which participant the outlying value belongs to
+# Visualize the data to see if there are any major outliers â€“ super long RTs or overall low mean accuracy: use a boxplot with a labelling function to identify which participant the outlying value belongs to
 boxplot(summary_data $RT, label(subject))
 boxplot(summary_data $mean_accuracy, label(subject)) 
 
@@ -72,40 +72,40 @@ bar_graph(accuracy, x = n_type, data = summary_data) #graph for overall performa
 
 bar_graph(accuracy, x = n_type, fill_of_bars = trial_type, data = summary_data) #graph for performance broken down by trial type
 
-# for the trial by trial analysis, need to recode the accuracy data – currently incorrect responses are 0, and correct responses are 1 
+# for the trial by trial analysis, need to recode the accuracy data â€“ currently incorrect responses are 0, and correct responses are 1 
 # need to recode so that incorrect responses are -1 and correct responses are 1 
 dataset_correct$accuracy <- recode(0 to -1)
 
 # are there group differences in lure accuracy and lure RT (the three groups are BSO, BSOE2 and AMC)?
 # using mixed linear models controlling for age, and history of cancer treatments (chemotherapy, tamoxifen, radiation)
 # need to subset so we can analyze 2-back and 3-back lure accuracy and RTs
-2lure.accuracy <- glmer(accuracy ~ group + age + cancer_treatments + (1|subject), family = binomial, data = dataset_correct, subset = (n_type == “2-back” & trial_type == “lure”))
+2lure.accuracy <- glmer(accuracy ~ group + age + cancer_treatments + (1|subject), family = binomial, data = dataset_correct, subset = (n_type == â€œ2-backâ€ & trial_type == â€œlureâ€))
 summary(2lure.accuracy)
 
-3lure.accuracy <- glmer(accuracy ~ group + age + cancer_treatments + (1|subject), family = binomial, data = dataset_correct, subset = (n_type == “3-back” & trial_type == “lure”))
+3lure.accuracy <- glmer(accuracy ~ group + age + cancer_treatments + (1|subject), family = binomial, data = dataset_correct, subset = (n_type == â€œ3-backâ€ & trial_type == â€œlureâ€))
 summary(3lure.accuracy)
 
-2lure. RT <- lmer(RT ~ group + age + cancer_treatments + (1|subject), data = dataset_correct, subset = (n_type == “2-back” & trial_type == “lure”))
+2lure. RT <- lmer(RT ~ group + age + cancer_treatments + (1|subject), data = dataset_correct, subset = (n_type == â€œ2-backâ€ & trial_type == â€œlureâ€))
 summary(2lure. RT)
 
-3lure. RT <- lmer(RT ~ group + age + cancer_treatments + (1|subject), data = dataset_correct, subset = (n_type == “3-back” & trial_type == “lure”))
+3lure. RT <- lmer(RT ~ group + age + cancer_treatments + (1|subject), data = dataset_correct, subset = (n_type == â€œ3-backâ€ & trial_type == â€œlureâ€))
 summary(3lure. RT)
 
 # visualize the results with bargraphs 
-bar_graph(RT, x = group, data = summary_data, subset = (n_type == “2-back” & trial_type == “lure”)) 
+bar_graph(RT, x = group, data = summary_data, subset = (n_type == â€œ2-backâ€ & trial_type == â€œlureâ€)) 
 
-bar_graph(RT, x = group, data = summary_data, subset = (n_type == “3-back” & trial_type == “lure”)) 
+bar_graph(RT, x = group, data = summary_data, subset = (n_type == â€œ3-backâ€ & trial_type == â€œlureâ€)) 
 
-bar_graph(accuracy, x = group, data = summary_data, subset = (n_type == “2-back” & trial_type == “lure”)) 
+bar_graph(accuracy, x = group, data = summary_data, subset = (n_type == â€œ2-backâ€ & trial_type == â€œlureâ€)) 
 
-bar_graph(accuracy, x = group, data = summary_data, subset = (n_type == “3-back” & trial_type == “lure”)) 
+bar_graph(accuracy, x = group, data = summary_data, subset = (n_type == â€œ3-backâ€ & trial_type == â€œlureâ€)) 
 
 # is there a relationship between estradiol levels and performance on lure trials?
-correlation(estradiol, accuracy, control_for = age & cancer_treatments, data = dataset_correct, subset = (n_type == “2-back” & trial_type == “lure”)) # for the 2-back condition 
+correlation(estradiol, accuracy, control_for = age & cancer_treatments, data = dataset_correct, subset = (n_type == â€œ2-backâ€ & trial_type == â€œlureâ€)) # for the 2-back condition 
 
-correlation(estradiol, accuracy, control_for = age & cancer_treatments, data = dataset_correct, subset = (n_type == “3-back” & trial_type == “lure”)) # for the 3-back condition 
+correlation(estradiol, accuracy, control_for = age & cancer_treatments, data = dataset_correct, subset = (n_type == â€œ3-backâ€ & trial_type == â€œlureâ€)) # for the 3-back condition 
 
-# create a plot for the correlation
-scatter_plot(estradiol, accuracy, data = dataset_correct, subset = (n_type == “2-back” & trial_type == “lure”))
+# create plots for the correlations
+scatter_plot(estradiol, accuracy, data = dataset_correct, subset = (n_type == â€œ2-backâ€ & trial_type == â€œlureâ€))
 
-scatter_plot(estradiol, accuracy, data = dataset_correct, subset = (n_type == “3-back” & trial_type == “lure”))
+scatter_plot(estradiol, accuracy, data = dataset_correct, subset = (n_type == â€œ3-backâ€ & trial_type == â€œlureâ€))
